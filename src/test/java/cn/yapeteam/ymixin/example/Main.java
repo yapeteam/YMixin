@@ -38,18 +38,19 @@ public class Main {
     public static void main(String[] args) throws Exception {
         // 这里的init方法用来初始化YMixin，传入三个个参数，第一个参数是获取目标类的回调函数，第二个参数是获取目标类字节码的回调函数，第三个参数是日志的回调函数
         YMixin.init(clazz -> {
-            try {
-                return Class.forName(clazz);
-            } catch (ClassNotFoundException e) {
-                return null;
-            }
-        }, clazz -> {
-            try {
-                return readStream(Objects.requireNonNull(Main.class.getResourceAsStream("/" + clazz.getName().replace(".", "/") + ".class")));
-            } catch (Exception e) {
-                return null;
-            }
-        }, null);
+                    try {
+                        return Class.forName(clazz);
+                    } catch (ClassNotFoundException e) {
+                        return null;
+                    }
+                }, clazz -> {
+                    try {
+                        return readStream(Objects.requireNonNull(Main.class.getResourceAsStream("/" + clazz.getName().replace(".", "/") + ".class")));
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }, null
+        );
         // 这里的Mapper设置为None，因为目标类没有经过混淆
         Mapper.setMode(Mapper.Mode.None);
         // 这里的readMappings用来读取混淆映射表，如果目标类没有经过混淆，则不需要调用
