@@ -13,6 +13,7 @@ public class MixinTargetClass {
      * 注入代码可以是任意的Java代码，包括方法调用、赋值语句、if语句等等
      */
 
+    // 这里演示了注入代码到目标方法的不同位置
     @Inject(method = "targetMethod1", desc = "()V", target = @Target("HEAD"))
     public void test1() {
         System.out.println("Hello, TargetClass!");
@@ -34,9 +35,9 @@ public class MixinTargetClass {
         System.out.println("Hello, str: " + str0.hashCode() + "!");
     }
 
+    // 这里的Shadow注解用于访问目标类的成员变量的值
     @Shadow
     private String prefix;
-    // 这里的Shadow注解用于访问目标类的成员变量的值
 
     @Inject(method = "targetMethod4", desc = "()V", target = @Target("HEAD"))
     public void test4() {
@@ -76,5 +77,12 @@ public class MixinTargetClass {
     // 这里演示了如何注入代码到目标类的成员变量的赋值操作之前
     public void test6() {
         System.out.println("Hello, Field prefix!");
+    }
+
+    // 这里演示了重写目标方法
+    // @Overwrite的用法与@Override相同
+    @Overwrite(method = "targetMethod7", desc = "()V")
+    public void test7() {
+        System.out.println("Hello from Mixin!");
     }
 }

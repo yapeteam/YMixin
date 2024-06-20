@@ -16,6 +16,8 @@ public class TargetClass {
         targetMethod5();
         System.out.println("targetMethod6():");
         targetMethod6();
+        System.out.println("targetMethod7():");
+        targetMethod7();
     }
 
     public void targetMethod1() {
@@ -52,5 +54,9 @@ public class TargetClass {
         System.out.println("Hello, World2!");
         prefix = "[Prefix2]";
         System.out.println("Hello, World3!");
+    }
+
+    public void targetMethod7() {
+        System.out.println("Hello, World!");
     }
 }
