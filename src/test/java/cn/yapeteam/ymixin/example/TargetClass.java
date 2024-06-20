@@ -2,6 +2,7 @@ package cn.yapeteam.ymixin.example;
 
 // 这是目标类
 public class TargetClass {
+    @SuppressWarnings("unused")
     public void run() {
         System.out.println("targetMethod1():");
         targetMethod1();
