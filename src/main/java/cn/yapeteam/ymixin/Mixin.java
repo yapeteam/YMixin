@@ -15,7 +15,7 @@ public class Mixin {
     private ClassNode target;
     private final String targetName;
 
-    public Mixin(ClassNode source, ClassBytesProvider provider) throws Throwable {
+    public Mixin(ClassNode source, ClassBytesProvider provider) {
         this.source = source;
         Class<?> targetClass = Objects.requireNonNull(cn.yapeteam.ymixin.annotations.Mixin.Helper.getAnnotation(source)).value();
         targetName = targetClass.getName().replace('.', '/');
@@ -27,7 +27,10 @@ public class Mixin {
                 target = ASMUtils.node(targetOldBytes);
             } catch (Throwable ignored) {
                 try_count++;
-                Thread.sleep(500);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ignored1) {
+                }
             }
         }
         if (target == null)

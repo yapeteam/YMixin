@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@SuppressWarnings("unused")
 public class Mapper {
     @Getter
     @AllArgsConstructor
@@ -22,26 +23,15 @@ public class Mapper {
     }
 
     public enum Mode {
-        None, Vanilla, Searge
+        None, Srg
     }
-
 
 
     /**
      * friendly→obf
      **/
     @Getter
-    private static ArrayList<Map> mappings = new ArrayList<>();
-    /**
-     * friendly→notch
-     **/
-    @Getter
-    private static final ArrayList<Map> vanilla = new ArrayList<>();
-    /**
-     * friendly→searges
-     **/
-    @Getter
-    private static final ArrayList<Map> searges = new ArrayList<>();
+    private static final ArrayList<Map> mappings = new ArrayList<>();
 
     @Getter
     public static Mode mode = null;
@@ -97,9 +87,8 @@ public class Mapper {
         }
     }
 
-    public static void readMappings(String vanilla, String forge) {
-        readMapping(vanilla, getVanilla());
-        readMapping(forge, getSearges());
+    public static void readMappings(String srg) {
+        readMapping(srg, mappings);
     }
 
     @Getter
@@ -131,25 +120,11 @@ public class Mapper {
 
     public static void setMode(Mode mode) {
         Mapper.mode = mode;
-        switch (mode) {
-            case Vanilla:
-                mappings = vanilla;
-                break;
-            case Searge:
-                mappings = searges;
-                break;
-            case None:
-                break;
-        }
     }
 
     public static String applyMode(Map map) {
         switch (mode) {
-            case Vanilla:
-                return map.obf;
-            case Searge:
-                if (map.type == Type.Class)
-                    return map.name;
+            case Srg:
                 return map.obf;
             case None:
                 return map.name;

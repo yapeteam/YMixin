@@ -5,6 +5,7 @@ import cn.yapeteam.ymixin.operation.impl.InjectOperation;
 import cn.yapeteam.ymixin.operation.impl.ModifyOperation;
 import cn.yapeteam.ymixin.operation.impl.OverwriteOperation;
 import cn.yapeteam.ymixin.utils.ASMUtils;
+import cn.yapeteam.ymixin.utils.ClassMapper;
 import lombok.Getter;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -12,17 +13,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cn.yapeteam.ymixin.YMixin.Logger;
+import static cn.yapeteam.ymixin.YMixin.*;
 
 @Getter
 public class Transformer {
-    private final ClassBytesProvider provider;
     private final ArrayList<cn.yapeteam.ymixin.Mixin> mixins;
     private final ArrayList<Operation> operations;
     private final Map<String, byte[]> oldBytes = new HashMap<>();
 
-    public Transformer(ClassBytesProvider classBytesProvider) {
-        this.provider = classBytesProvider;
+    public Transformer() {
         this.mixins = new ArrayList<>();
         this.operations = new ArrayList<>();
         operations.add(new InjectOperation());
@@ -30,12 +29,12 @@ public class Transformer {
         operations.add(new ModifyOperation());
     }
 
-    public void addMixin(ClassNode node) throws Throwable {
-        mixins.add(new Mixin(node, provider));
+    public void addMixin(byte[] bytes) {
+        mixins.add(new Mixin(ASMUtils.node(ClassMapper.map(bytes)), classBytesProvider));
     }
 
-    public void addMixin(byte[] bytes) throws Throwable {
-        addMixin(ASMUtils.node(bytes));
+    public void addMixin(Class<?> clazz) {
+        addMixin((classBytesProvider.getClassBytes(clazz)));
     }
 
     public Map<String, byte[]> transform() {

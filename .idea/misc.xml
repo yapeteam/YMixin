@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="EntryPointsManager">
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="cn.yapeteam.ymixin.annotations.Inject" />
+    </list>
+    <writeAnnotations>
+      <writeAnnotation name="cn.yapeteam.ymixin.annotations.Shadow" />
+    </writeAnnotations>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="MavenProjectsManager">
     <option name="originalFiles">
