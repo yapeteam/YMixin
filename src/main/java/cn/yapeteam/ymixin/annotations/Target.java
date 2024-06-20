@@ -1,8 +1,8 @@
 package cn.yapeteam.ymixin.annotations;
 
 import cn.yapeteam.ymixin.utils.ASMUtils;
-import org.objectweb.asm_9_2.tree.AnnotationNode;
-import org.objectweb.asm_9_2.tree.MethodNode;
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;

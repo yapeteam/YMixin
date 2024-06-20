@@ -6,7 +6,7 @@ import cn.yapeteam.ymixin.operation.impl.ModifyOperation;
 import cn.yapeteam.ymixin.operation.impl.OverwriteOperation;
 import cn.yapeteam.ymixin.utils.ASMUtils;
 import lombok.Getter;
-import org.objectweb.asm_9_2.tree.ClassNode;
+import org.objectweb.asm.tree.ClassNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;

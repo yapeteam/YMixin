@@ -4,15 +4,15 @@ import cn.yapeteam.ymixin.utils.Mapper;
 import cn.yapeteam.ymixin.Mixin;
 import cn.yapeteam.ymixin.annotations.Modify;
 import cn.yapeteam.ymixin.operation.Operation;
-import org.objectweb.asm_9_2.tree.*;
+import org.objectweb.asm.tree.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static cn.yapeteam.ymixin.YMixin.Logger;
-import static org.objectweb.asm_9_2.Opcodes.*;
-import static org.objectweb.asm_9_2.TypeReference.NEW;
+import static org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.TypeReference.NEW;
 
 
 public class ModifyOperation implements Operation {

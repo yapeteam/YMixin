@@ -4,9 +4,9 @@ import cn.yapeteam.ymixin.YMixin;
 import cn.yapeteam.ymixin.utils.ASMUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm_9_2.Type;
-import org.objectweb.asm_9_2.tree.AnnotationNode;
-import org.objectweb.asm_9_2.tree.ClassNode;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.ClassNode;
 
 import java.lang.annotation.Target;
 import java.lang.annotation.*;

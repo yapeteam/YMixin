@@ -4,8 +4,8 @@ import cn.yapeteam.ymixin.Mixin;
 import cn.yapeteam.ymixin.annotations.Overwrite;
 import cn.yapeteam.ymixin.operation.Operation;
 import cn.yapeteam.ymixin.utils.Mapper;
-import org.objectweb.asm_9_2.tree.ClassNode;
-import org.objectweb.asm_9_2.tree.MethodNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.util.List;
 import java.util.stream.Collectors;

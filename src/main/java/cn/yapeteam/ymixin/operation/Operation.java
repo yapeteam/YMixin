@@ -4,8 +4,8 @@ package cn.yapeteam.ymixin.operation;
 import cn.yapeteam.ymixin.utils.Mapper;
 import cn.yapeteam.ymixin.Mixin;
 import cn.yapeteam.ymixin.utils.DescParser;
-import org.objectweb.asm_9_2.Opcodes;
-import org.objectweb.asm_9_2.tree.MethodNode;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.lang.reflect.Field;
 import java.util.List;

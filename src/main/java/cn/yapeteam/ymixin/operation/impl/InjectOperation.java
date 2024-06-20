@@ -9,10 +9,10 @@ import cn.yapeteam.ymixin.utils.ASMUtils;
 import cn.yapeteam.ymixin.utils.DescParser;
 import cn.yapeteam.ymixin.utils.Mapper;
 import org.jetbrains.annotations.NotNull;
-import org.objectweb.asm_9_2.Label;
-import org.objectweb.asm_9_2.MethodVisitor;
-import org.objectweb.asm_9_2.Opcodes;
-import org.objectweb.asm_9_2.tree.*;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
