@@ -82,7 +82,8 @@ public class MixinTargetClass {
     // 这里演示了重写目标方法
     // @Overwrite的用法与@Override相同
     @Overwrite(method = "targetMethod7", desc = "()V")
-    public void test7() {
+    public void test7(int i) {
         System.out.println("Hello from Mixin!");
+        System.out.println(i);
     }
 }
