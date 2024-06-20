@@ -37,7 +37,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         // 这里的init方法用来初始化YMixin，传入三个个参数，第一个参数是获取目标类的回调函数，第二个参数是获取目标类字节码的回调函数，第三个参数是日志的回调函数
-        YMixin.init(clazz -> {
+        YMixin.init(
+                clazz -> {
                     try {
                         return Class.forName(clazz);
                     } catch (ClassNotFoundException e) {
