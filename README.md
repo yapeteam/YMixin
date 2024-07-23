@@ -23,7 +23,7 @@ public static void init(ClassProvider provider, ClassBytesProvider bytesProvider
 | ClassBytesProvider bytesProvider | 获取目标类字节码的回调函数 |
 |     @Nullable Logger logger      |    日志的回调函数    |
 
-如果没有特殊的需要，你可以安装例子中的写法:
+如果没有特殊的需要，你可以按照例子中的写法:
 
 ```
 YMixin.init(
