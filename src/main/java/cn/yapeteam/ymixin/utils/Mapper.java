@@ -7,9 +7,10 @@ import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
-@SuppressWarnings("unused")
 public class Mapper {
     @Getter
     @AllArgsConstructor
@@ -23,15 +24,24 @@ public class Mapper {
     }
 
     public enum Mode {
-        None, Srg
+        None, Vanilla, Searge
     }
-
 
     /**
      * friendly→obf
      **/
     @Getter
-    private static final ArrayList<Map> mappings = new ArrayList<>();
+    private static ArrayList<Map> mappings = new ArrayList<>();
+    /**
+     * friendly→notch
+     **/
+    @Getter
+    private static final ArrayList<Map> vanilla = new ArrayList<>();
+    /**
+     * friendly→searges
+     **/
+    @Getter
+    private static final ArrayList<Map> searges = new ArrayList<>();
 
     @Getter
     public static Mode mode = null;
@@ -50,24 +60,24 @@ public class Mapper {
                     break;
                 case "FD":
                     if (values.length == 4) {
-                        obf = ASMUtils.split(values[0], "/");
-                        friendly = ASMUtils.split(values[2], "/");
+                        obf = StringUtil.split(values[0], "/");
+                        friendly = StringUtil.split(values[2], "/");
                         dest.add(new Map(
                                 values[2].replace("/" + friendly[friendly.length - 1], ""),
                                 friendly[friendly.length - 1],
                                 values[3],
                                 obf[obf.length - 1],
-                                Mapper.Type.Field
+                                Type.Field
                         ));
                     } else if (values.length == 2) {
-                        obf = ASMUtils.split(values[0], "/");
-                        friendly = ASMUtils.split(values[1], "/");
+                        obf = StringUtil.split(values[0], "/");
+                        friendly = StringUtil.split(values[1], "/");
                         dest.add(new Map(
                                 values[1].replace("/" + friendly[friendly.length - 1], ""),
                                 friendly[friendly.length - 1],
                                 null,
                                 obf[obf.length - 1],
-                                Mapper.Type.Field
+                                Type.Field
                         ));
                     }
                     break;
@@ -85,10 +95,6 @@ public class Mapper {
                     );
             }
         }
-    }
-
-    public static void readMappings(String srg) {
-        readMapping(srg, mappings);
     }
 
     @Getter
@@ -120,11 +126,26 @@ public class Mapper {
 
     public static void setMode(Mode mode) {
         Mapper.mode = mode;
+        switch (mode) {
+            case Vanilla:
+                mappings = vanilla;
+                break;
+            case Searge:
+                mappings = searges;
+                break;
+            case None:
+                break;
+        }
+        cache.clear();
     }
 
     public static String applyMode(Map map) {
         switch (mode) {
-            case Srg:
+            case Vanilla:
+                return map.obf;
+            case Searge:
+                if (map.type == Type.Class)
+                    return map.name;
                 return map.obf;
             case None:
                 return map.name;
@@ -143,18 +164,23 @@ public class Mapper {
         ).forEach(m -> owners.put(m.owner, m));
         String mappedOwner = map(null, owner, null, Type.Class);
         Class<?> theClass = YMixin.classProvider.get(mappedOwner);
-        while (theClass != Object.class) {
-            if (theClass != null) {
-                Class<?> finalTheClass = theClass;
-                java.util.Map.Entry<String, Map> entry = owners.entrySet().stream()
-                        .filter(m -> map(null, m.getKey(), null, Type.Class).equals(finalTheClass.getName().replace('.', '/')))
-                        .findFirst().orElse(null);
-                if (entry != null) {
-                    cache.put(identifier, applyMode(entry.getValue()));
-                    return applyMode(entry.getValue());
-                }
-                theClass = theClass.getSuperclass();
+        List<Class<?>> classes = new ArrayList<>();
+        Class<?> superClz = theClass;
+        while (superClz != Object.class) {
+            if (superClz != null) {
+                classes.add(superClz);
+                classes.addAll(Arrays.asList(superClz.getInterfaces()));
+                superClz = superClz.getSuperclass();
             } else break;
+        }
+        for (Class<?> clz : classes) {
+            java.util.Map.Entry<String, Map> entry = owners.entrySet().stream()
+                    .filter(m -> map(null, m.getKey(), null, Type.Class).equals(clz.getName().replace('.', '/')))
+                    .findFirst().orElse(null);
+            if (entry != null) {
+                cache.put(identifier, applyMode(entry.getValue()));
+                return applyMode(entry.getValue());
+            }
         }
         return name;
     }

@@ -2,12 +2,10 @@ package cn.yapeteam.ymixin;
 
 import cn.yapeteam.ymixin.operation.Operation;
 import cn.yapeteam.ymixin.operation.impl.InjectOperation;
-import cn.yapeteam.ymixin.operation.impl.ModifyOperation;
 import cn.yapeteam.ymixin.operation.impl.OverwriteOperation;
 import cn.yapeteam.ymixin.utils.ASMUtils;
 import cn.yapeteam.ymixin.utils.ClassMapper;
 import lombok.Getter;
-import org.objectweb.asm.tree.ClassNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +24,6 @@ public class Transformer {
         this.operations = new ArrayList<>();
         operations.add(new InjectOperation());
         operations.add(new OverwriteOperation());
-        operations.add(new ModifyOperation());
     }
 
     public void addMixin(byte[] bytes) {

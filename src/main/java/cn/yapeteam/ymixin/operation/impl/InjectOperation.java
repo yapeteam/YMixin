@@ -8,6 +8,7 @@ import cn.yapeteam.ymixin.operation.Operation;
 import cn.yapeteam.ymixin.utils.ASMUtils;
 import cn.yapeteam.ymixin.utils.DescParser;
 import cn.yapeteam.ymixin.utils.Mapper;
+import cn.yapeteam.ymixin.utils.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -23,12 +24,12 @@ import java.util.stream.Collectors;
 import static cn.yapeteam.ymixin.YMixin.Logger;
 
 public class InjectOperation implements Operation {
-    private static AbstractInsnNode[] getBlock(AbstractInsnNode node, InsnList list) {
-        AbstractInsnNode first = null, last = null;
+    private static LabelNode[] getBlock(AbstractInsnNode node, InsnList list) {
+        LabelNode first = null, last = null;
         for (int i = 0; i < list.size(); i++) {
             AbstractInsnNode abstractInsnNode = list.get(i);
             if (abstractInsnNode instanceof LabelNode)
-                first = abstractInsnNode;
+                first = (LabelNode) abstractInsnNode;
             if (abstractInsnNode == node)
                 break;
         }
@@ -38,12 +39,12 @@ public class InjectOperation implements Operation {
                 passed = true;
             if (passed) {
                 if (abstractInsnNode instanceof LabelNode) {
-                    last = abstractInsnNode;
+                    last = (LabelNode) abstractInsnNode;
                     break;
                 }
             }
         }
-        return new AbstractInsnNode[]{first, last};
+        return new LabelNode[]{first, last};
     }
 
     private static void processReturnLabel(MethodNode source) {
@@ -139,7 +140,7 @@ public class InjectOperation implements Operation {
             Logger.error("No target found: {} in {}", info.target().value() + " " + info.target().target(), target.name);
             return;
         }
-        AbstractInsnNode[] block = getBlock(targetNode, target.instructions);
+        LabelNode[] block = getBlock(targetNode, target.instructions);
         Target.Shift shift = info.target().shift();
         InsnList list = new InsnList();
         if (info.target().value().equals("HEAD")) {
@@ -155,16 +156,40 @@ public class InjectOperation implements Operation {
             target.instructions = list;
             return;
         }
+        source.instructions.remove(source.instructions.get(0));//刪除開頭的label node
+        //  L0
+        //    LINENUMBER 5 L0
+        //    LDC 10.0
+        //    FSTORE 0
+        //   L1 ; block[0]
+        //    ++GOTO XX ; Before
+        // ++LX
+        //    LINENUMBER 6 L1
+        //    LDC 11.0 ; target
+        //    FSTORE 1
+        //    ++GOTO XX ; After
+        //   L2 ; block[1]
+        //   RETURN
+        //   XX
+        //   INVOKEXXX
+        //   GOTO LX ; 跳回
+        // block[0]為當前區塊的label node
+        // block[1]為下個區塊的label node
+        LabelNode back = new LabelNode();
+        source.instructions.add(new JumpInsnNode(Opcodes.GOTO, shift == Target.Shift.BEFORE ? back : block[1]));//跳回下一個區塊
         for (int i = 0; i < target.instructions.size(); i++) {
             AbstractInsnNode instruction = target.instructions.get(i);
             if (shift == Target.Shift.BEFORE && instruction == block[0]) {
-                list.add(source.instructions);
                 list.add(instruction);
-            } else if (shift == Target.Shift.AFTER && instruction == block[1]) {
+                list.add(new JumpInsnNode(Opcodes.GOTO, (LabelNode) target.instructions.get(target.instructions.size() - 1)));//寫入跳轉碼
+                list.add(back);//將下面的指令歸入back
+            } else if (shift == Target.Shift.AFTER && instruction.getNext() == block[1]) {
                 list.add(instruction);
-                list.add(source.instructions);
+                list.add(new JumpInsnNode(Opcodes.GOTO, (LabelNode) target.instructions.get(target.instructions.size() - 1)));
             } else list.add(instruction);
         }
+        list.add(source.instructions);//將需要插入的字節碼追加到結尾
+        list.add(new LabelNode());
         target.instructions = list;
     }
 
@@ -228,9 +253,9 @@ public class InjectOperation implements Operation {
     }
 
     private static String[] parseOpe(String ope) {
-        String[] owner_name$desc = ASMUtils.split(ope, ".");
+        String[] owner_name$desc = StringUtil.split(ope, ".");
         String owner = owner_name$desc[0];
-        String name = ope.contains(" ") ? ASMUtils.split(owner_name$desc[1], " ")[0] : ASMUtils.split(owner_name$desc[1], "(")[0];
+        String name = ope.contains(" ") ? StringUtil.split(owner_name$desc[1], " ")[0] : StringUtil.split(owner_name$desc[1], "(")[0];
         String desc = owner_name$desc[1].replace(name, "").replace(" ", "");
         return new String[]{owner, name, desc};
     }

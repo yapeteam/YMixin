@@ -1,7 +1,5 @@
 package cn.yapeteam.ymixin.utils;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +13,7 @@ public class DescParser {
         public LMethodDesc(String content) {
             source = content;
             paramTypes = parseType(cutBetween(content, '(', ')'));
-            String[] returnType = parseType(split(content, ")")[1]);
+            String[] returnType = parseType(StringUtil.split(content, ")")[1]);
             this.returnType = returnType.length > 0 ? returnType[0] : "";
         }
 
@@ -51,32 +49,6 @@ public class DescParser {
 
     public static String replaceFirst(String string, CharSequence target, CharSequence replacement) {
         return Pattern.compile(target.toString(), Pattern.LITERAL).matcher(string).replaceFirst(Matcher.quoteReplacement(replacement.toString()));
-    }
-
-    public static String[] split(@NotNull String str, String splitter) {
-        if (!str.contains(splitter))
-            return new String[]{};
-        ArrayList<String> result = new ArrayList<>();
-        StringBuilder stringBuilder = new StringBuilder();
-        StringBuilder passed = new StringBuilder();
-        for (int i = 0; i < str.length() - (splitter.length() - 1); i++) {
-            StringBuilder sb = new StringBuilder();
-            for (int j = i; j < i + splitter.length(); j++)
-                sb.append(str.charAt(j));
-            if (sb.toString().equals(splitter)) {
-                result.add(stringBuilder.toString());
-                passed.append(stringBuilder);
-                passed.append(splitter);
-                stringBuilder = new StringBuilder();
-                i += splitter.length();
-            }
-            if (i < str.length() - 1)
-                stringBuilder.append(str.charAt(i));
-        }
-        String last = str.replace(passed.toString(), "");
-        if (!last.isEmpty())
-            result.add(last);
-        return result.toArray(new String[0]);
     }
 
     public static String cutBetween(String content, char start, char end) {

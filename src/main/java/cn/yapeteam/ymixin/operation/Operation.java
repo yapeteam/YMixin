@@ -1,10 +1,11 @@
 package cn.yapeteam.ymixin.operation;
 
 
-import cn.yapeteam.ymixin.utils.Mapper;
 import cn.yapeteam.ymixin.Mixin;
 import cn.yapeteam.ymixin.utils.DescParser;
+import cn.yapeteam.ymixin.utils.Mapper;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.lang.reflect.Field;
@@ -34,6 +35,8 @@ public interface Operation {
                         return true;
                 } catch (Throwable ignored) {
                 }
+        LabelNode node = new LabelNode();
+
         return false;
     }
 

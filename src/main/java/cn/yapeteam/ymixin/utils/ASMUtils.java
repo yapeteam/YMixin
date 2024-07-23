@@ -30,10 +30,6 @@ public class ASMUtils {
         return null;
     }
 
-    public static String readClassName(byte[] bytes) {
-        return new ClassReader(bytes).getClassName();
-    }
-
     public static byte[] rewriteClass(@NotNull ClassNode node) {
         ClassWriter writer = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES) {
             @Override
