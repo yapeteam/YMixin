@@ -41,6 +41,7 @@ public class Mapper {
      * @return ObfName
      */
     public static String map(@Nullable String owner, String name, @Nullable String desc, Type type) {
+        if (!YMixin.hasMapping) return name;
         if (owner != null) owner = owner.replace('.', '/');
         String identifier = owner + "." + name + " " + desc;
         String value = cache.get(identifier);
@@ -58,6 +59,7 @@ public class Mapper {
     }
 
     public static String mapWithSuper(String owner, String name, String desc, Type type) {
+        if (!YMixin.hasMapping) return name;
         owner = owner.replace('.', '/');
         String identifier = owner + "." + name + " " + desc;
         String value = cache.get(identifier);
