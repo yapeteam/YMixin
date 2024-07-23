@@ -43,12 +43,12 @@ public @interface Overwrite {
         }
 
         public static boolean hasAnnotation(@NotNull MethodNode node) {
-            return node.visibleAnnotations != null && node.visibleAnnotations.stream().anyMatch(Overwrite.Helper::isAnnotation);
+            return node.visibleAnnotations != null && node.visibleAnnotations.stream().anyMatch(Helper::isAnnotation);
         }
 
         public static @Nullable Overwrite getAnnotation(MethodNode node) {
             if (!hasAnnotation(node)) return null;
-            return fromNode(node.visibleAnnotations.stream().filter(Overwrite.Helper::isAnnotation).findFirst().orElse(null));
+            return fromNode(node.visibleAnnotations.stream().filter(Helper::isAnnotation).findFirst().orElse(null));
         }
     }
 }

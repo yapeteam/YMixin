@@ -2,7 +2,6 @@ package cn.yapeteam.ymixin.example;
 
 import cn.yapeteam.ymixin.Transformer;
 import cn.yapeteam.ymixin.YMixin;
-import cn.yapeteam.ymixin.utils.Mapper;
 import lombok.val;
 
 import java.io.ByteArrayOutputStream;
@@ -35,7 +34,7 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Throwable {
         // 这里的init方法用来初始化YMixin，传入三个个参数，第一个参数是获取目标类的回调函数，第二个参数是获取目标类字节码的回调函数，第三个参数是日志的回调函数
         YMixin.init(
                 clazz -> {
@@ -50,12 +49,13 @@ public class Main {
                     } catch (Exception e) {
                         return null;
                     }
-                }, null
+                }, null,
+                null, //这里的 MappingReader 设置为 null，因为目标类没有经过混淆
+                null //这里的 MappingContent 设置为 null ，因为目标类没有经过混淆
         );
-        // 这里的Mapper设置为None，因为目标类没有经过混淆
-        Mapper.setMode(Mapper.Mode.None);
-        // 这里的readMappings用来读取混淆映射表，如果目标类没有经过混淆，则不需要调用
-        // Mapper.readMappings(srgFile);
+        //若 MappingContent 不为 null，且 MappingReader 为 null，YMixin将自动选择SrgMappingReader
+        //只要 MappingContent 为 null YMixin就会认为无需进行重映射
+        //实例化一个Transformer，用于修改字节码
         Transformer transformer = new Transformer();
         transformer.addMixin(MixinTargetClass.class);
         // transformer.transform(); 返回的Map中，key为目标类的全限定名，value为字节码

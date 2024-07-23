@@ -1,11 +1,13 @@
 package cn.yapeteam.ymixin;
 
+import cn.yapeteam.ymixin.annotations.Shadow;
 import cn.yapeteam.ymixin.operation.Operation;
 import cn.yapeteam.ymixin.operation.impl.InjectOperation;
 import cn.yapeteam.ymixin.operation.impl.OverwriteOperation;
 import cn.yapeteam.ymixin.utils.ASMUtils;
 import cn.yapeteam.ymixin.utils.ClassMapper;
 import lombok.Getter;
+import org.objectweb.asm.tree.ClassNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,12 +28,18 @@ public class Transformer {
         operations.add(new OverwriteOperation());
     }
 
-    public void addMixin(byte[] bytes) {
-        mixins.add(new Mixin(ASMUtils.node(ClassMapper.map(bytes)), classBytesProvider));
+    public void addMixin(byte[] bytes) throws Throwable {
+        addMixin(ASMUtils.node(bytes));
     }
 
-    public void addMixin(Class<?> clazz) {
-        addMixin((classBytesProvider.getClassBytes(clazz)));
+    public void addMixin(Class<?> clazz) throws Throwable {
+        addMixin(classBytesProvider.getClassBytes(clazz));
+    }
+
+    public void addMixin(ClassNode node) throws Throwable {
+        Shadow.Helper.processShadow(node);
+        ClassMapper.map(node, ClassMapper.MapMode.Mixed);
+        mixins.add(new Mixin(node, classBytesProvider));
     }
 
     public Map<String, byte[]> transform() {

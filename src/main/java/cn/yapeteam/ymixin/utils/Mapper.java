@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Mapper {
     @Getter
@@ -23,78 +20,14 @@ public class Mapper {
         Class, Field, Method
     }
 
-    public enum Mode {
-        None, Vanilla, Searge
-    }
-
     /**
      * friendly→obf
      **/
     @Getter
-    private static ArrayList<Map> mappings = new ArrayList<>();
-    /**
-     * friendly→notch
-     **/
-    @Getter
-    private static final ArrayList<Map> vanilla = new ArrayList<>();
-    /**
-     * friendly→searges
-     **/
-    @Getter
-    private static final ArrayList<Map> searges = new ArrayList<>();
+    private static final ArrayList<Map> mappings = new ArrayList<>();
 
-    @Getter
-    public static Mode mode = null;
-
-    public static void readMapping(String content, ArrayList<Map> dest) {
-        content = content.replace("\r", "\n");
-        dest.clear();
-        for (String line : content.split("\n")) {
-            line = line.replace("\n", "");
-            if (line.length() <= 4) continue;
-            String[] values = line.substring(4).split(" ");
-            String[] obf, friendly;
-            switch (line.substring(0, 2)) {
-                case "CL":
-                    dest.add(new Map(null, values[1], null, values[0], Type.Class));
-                    break;
-                case "FD":
-                    if (values.length == 4) {
-                        obf = StringUtil.split(values[0], "/");
-                        friendly = StringUtil.split(values[2], "/");
-                        dest.add(new Map(
-                                values[2].replace("/" + friendly[friendly.length - 1], ""),
-                                friendly[friendly.length - 1],
-                                values[3],
-                                obf[obf.length - 1],
-                                Type.Field
-                        ));
-                    } else if (values.length == 2) {
-                        obf = StringUtil.split(values[0], "/");
-                        friendly = StringUtil.split(values[1], "/");
-                        dest.add(new Map(
-                                values[1].replace("/" + friendly[friendly.length - 1], ""),
-                                friendly[friendly.length - 1],
-                                null,
-                                obf[obf.length - 1],
-                                Type.Field
-                        ));
-                    }
-                    break;
-                case "MD":
-                    obf = ASMUtils.split(values[0], "/");
-                    friendly = ASMUtils.split(values[2], "/");
-                    dest.add(
-                            new Map(
-                                    values[2].replace("/" + friendly[friendly.length - 1], ""),
-                                    friendly[friendly.length - 1],
-                                    values[3],
-                                    obf[obf.length - 1],
-                                    Type.Method
-                            )
-                    );
-            }
-        }
+    public static void readMapping(String content) {
+        YMixin.mappingReader.readMapping(content, getMappings());
     }
 
     @Getter
@@ -119,38 +52,9 @@ public class Mapper {
                         (m.name.equals(name.replace('.', '/'))) &&
                         (type == Type.Class || desc == null || m.desc.equals(desc))
         ).findFirst().orElse(new Map(owner, name, "null", name, type));
-        String result = applyMode(map);
+        String result = map.obf;
         cache.put(identifier, result);
         return result;
-    }
-
-    public static void setMode(Mode mode) {
-        Mapper.mode = mode;
-        switch (mode) {
-            case Vanilla:
-                mappings = vanilla;
-                break;
-            case Searge:
-                mappings = searges;
-                break;
-            case None:
-                break;
-        }
-        cache.clear();
-    }
-
-    public static String applyMode(Map map) {
-        switch (mode) {
-            case Vanilla:
-                return map.obf;
-            case Searge:
-                if (map.type == Type.Class)
-                    return map.name;
-                return map.obf;
-            case None:
-                return map.name;
-        }
-        return map.name;
     }
 
     public static String mapWithSuper(String owner, String name, String desc, Type type) {
@@ -178,8 +82,8 @@ public class Mapper {
                     .filter(m -> map(null, m.getKey(), null, Type.Class).equals(clz.getName().replace('.', '/')))
                     .findFirst().orElse(null);
             if (entry != null) {
-                cache.put(identifier, applyMode(entry.getValue()));
-                return applyMode(entry.getValue());
+                cache.put(identifier, entry.getValue().obf);
+                return entry.getValue().obf;
             }
         }
         return name;
@@ -195,16 +99,5 @@ public class Mapper {
 
     public static String getObfClass(String name) {
         return map(null, name, null, Type.Class);
-    }
-
-    public static String getFriendlyClass(String obf) {
-        String value = cache.get(obf);
-        if (value != null) return value;
-        Map map = mappings.stream().filter(m -> m.type == Type.Class && m.obf.equals(obf.replace('.', '/'))).findFirst().orElse(null);
-        if (map != null) {
-            cache.put(obf, map.name);
-            return map.name;
-        }
-        return obf;
     }
 }

@@ -36,12 +36,12 @@ public @interface Mixin {
         }
 
         public static boolean hasAnnotation(@NotNull ClassNode node) {
-            return node.visibleAnnotations != null && node.visibleAnnotations.stream().anyMatch(Mixin.Helper::isAnnotation);
+            return node.visibleAnnotations != null && node.visibleAnnotations.stream().anyMatch(Helper::isAnnotation);
         }
 
         public static @Nullable Mixin getAnnotation(ClassNode node) {
             if (!hasAnnotation(node)) return null;
-            return fromNode(node.visibleAnnotations.stream().filter(Mixin.Helper::isAnnotation).findFirst().orElse(null));
+            return fromNode(node.visibleAnnotations.stream().filter(Helper::isAnnotation).findFirst().orElse(null));
         }
     }
 }

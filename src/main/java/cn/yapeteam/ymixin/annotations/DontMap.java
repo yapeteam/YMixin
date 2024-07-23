@@ -19,11 +19,11 @@ public @interface DontMap {
         }
 
         public static boolean hasAnnotation(@NotNull ClassNode node) {
-            return node.visibleAnnotations != null && node.visibleAnnotations.stream().anyMatch(DontMap.Helper::isAnnotation);
+            return node.visibleAnnotations != null && node.visibleAnnotations.stream().anyMatch(Helper::isAnnotation);
         }
 
         public static boolean hasAnnotation(@NotNull MethodNode node) {
-            return node.visibleAnnotations != null && node.visibleAnnotations.stream().anyMatch(DontMap.Helper::isAnnotation);
+            return node.visibleAnnotations != null && node.visibleAnnotations.stream().anyMatch(Helper::isAnnotation);
         }
     }
 }
