@@ -14,7 +14,7 @@ YMixin是一个与Mixin类似的字节码插桩工具。与Mixin不同的是，Y
 ## 1.初始化
 
 ```java
-public static void init(ClassProvider provider, ClassBytesProvider bytesProvider, @Nullable Logger logger)
+public static void init(ClassProvider provider, ClassBytesProvider bytesProvider, @Nullable Logger logger);
 ```
 
 这个是YMixin.class中的init方法，这也就意味着，你需要初始化才能使用。
@@ -33,7 +33,7 @@ public static void init(ClassProvider provider, ClassBytesProvider bytesProvider
 
 如果没有特殊的需要，你可以安装例子中的写法:
 
-```java
+```
 YMixin.init(
   clazz -> {
     try {
@@ -59,7 +59,7 @@ YMixin.init(
 
 在*Mapper*类中，使用*setMode()*可以设置你的映射，当然设置后，你需要使用
 
-```java
+```
 Mapper.readMapping(where.your.mapping.file.are)
 ```
 
@@ -85,7 +85,7 @@ Mapper.readMapping(where.your.mapping.file.are)
 
 在新建的*Transformer*实例中使用*addMixin(class)*方法，可以添加你的插入代码.
 
-```java
+```
 transformer.transform().get("the.package.to.your.mixinclass")
 ```
 
