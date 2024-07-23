@@ -1,7 +1,6 @@
 package cn.yapeteam.ymixin.example;
 
-import cn.yapeteam.ymixin.Transformer;
-import cn.yapeteam.ymixin.YMixin;
+import cn.yapeteam.ymixin.*;
 import cn.yapeteam.ymixin.utils.Mapper;
 import lombok.val;
 

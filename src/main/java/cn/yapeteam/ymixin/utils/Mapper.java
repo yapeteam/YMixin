@@ -44,7 +44,7 @@ public class Mapper {
     private static final ArrayList<Map> searges = new ArrayList<>();
 
     @Getter
-    public static Mode mode = null;
+    public static Mode mode = Mode.None;
 
     public static void readMapping(String content, ArrayList<Map> dest) {
         content = content.replace("\r", "\n");
