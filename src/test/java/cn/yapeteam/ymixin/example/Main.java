@@ -54,7 +54,7 @@ public class Main {
         // 这里的Mapper设置为None，因为目标类没有经过混淆
         Mapper.setMode(Mapper.Mode.None);
         // 这里的readMappings用来读取混淆映射表，如果目标类没有经过混淆，则不需要调用
-        // Mapper.readMappings(srgFile);
+        // Mapper.readMapping(srgFile);
         Transformer transformer = new Transformer();
         transformer.addMixin(MixinTargetClass.class);
         // transformer.transform(); 返回的Map中，key为目标类的全限定名，value为字节码
