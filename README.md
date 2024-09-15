@@ -73,7 +73,7 @@ YMixin.init(
 
 若未提供<mapping_reader>，YMixin将默认使用SrgMappingReader
 
-如果没有你的混淆表文件格式，你可以自己写一个解析器，实现`cn.yapeteam.ymixin.utils.Mapper.IMappingReader`.
+如果没有你的混淆表文件格式，你可以自己写一个解析器，实现`cn.yapeteam.ymixin.utils.Mapper.IMappingReader`
 
 ## 3.创建转换器
 
