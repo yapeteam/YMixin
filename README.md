@@ -25,7 +25,7 @@ public static void init(ClassProvider provider, ClassBytesProvider bytesProvider
 
 如果没有特殊的需要，你可以按照例子中的写法:
 
-```
+```java
 YMixin.init(
   clazz -> {
     try {
@@ -51,7 +51,7 @@ YMixin.init(
 
 在YMixin初始化时，传入mapping_reader和mapping_content可以设置你的映射。
 
-```
+```java
 YMixin.init(
   clazz -> {
     try {
