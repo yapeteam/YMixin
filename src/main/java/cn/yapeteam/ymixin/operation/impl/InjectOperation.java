@@ -108,7 +108,7 @@ public class InjectOperation implements Operation {
                     if (getLocalVarIndex(source, sourceParameter[0]) == varInsnNode.var)
                         canChange = false;
                 if (canChange)
-                    varMap.put(varInsnNode.var, varInsnNode.var += max_index);
+                    varMap.put(varInsnNode.var, varInsnNode.var + max_index);
             }
         }
         //Access context local var
